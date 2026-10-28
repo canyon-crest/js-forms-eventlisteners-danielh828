@@ -1,113 +1,78 @@
-// ============================================
-//  Unit 8.7 – Forms & Event Listeners
-// ============================================
-//  Complete each section below by following
-//  the STEP comments.
-//
-//  IMPORTANT: Use addEventListener() to wire your
-//  buttons — do NOT add onclick in the HTML.
-// ============================================
-document.getElementById("btnShout").addEventListener('click', function() {
-    outShout.innerHTML = shoutInput.value.toUpperCase() + "!";
+
+document.getElementById("btnShout").addEventListener("click", function() {
+    let shout = document.getElementById("shoutInput").value;
+    document.getElementById("outShout").innerHTML = shout.toUpperCase() + "!";
 });
 
-// ============================================
-//  WARM-UP: Shout It!
-// ============================================
-// When the user types text and clicks "Shout",
-// display the text in ALL CAPS with "!" at the end.
+// Pizza Builder
+document.getElementById("btnCalc").addEventListener("click", function() {
 
-// STEP 1: Get the "Shout" button by its ID ("btnShout")
-//         using document.getElementById()
+    // a) Selected pizza size
+    const pizza = document.getElementsByName("rg");
+    let selected = 0;
 
-// STEP 2: Add a click event listener to the button.
-//         Inside the listener function:
-//         a) Get the text from the input with ID "shoutInput"
-//            using .value
-//         b) Convert the text to uppercase using .toUpperCase()
-//         c) Add "!" to the end
-//         d) Display the result in the element with ID "outShout"
-//            using .innerHTML
-//
-//         Example: "hello" → "HELLO!"
-
-
-// ============================================
-//  MAIN: Pizza Builder
-// ============================================
-// Calculate the total price of a pizza based on:
-//   - Size (radio buttons): Small $7.50, Medium $10.00,
-//     Large $12.50, XL $15.00
-//   - Toppings (checkboxes): $0.50 each
-//   - Service (dropdown): Dine In $0, Take Out $1.50,
-//     Delivery $3.00
-
-// STEP 3: Get the "Calculate Total" button by ID ("btnCalc")
-//         Add a click event listener.
-//         Inside the listener:
-
-//   a) Get the selected size price:
-//      Use document.getElementsByName("rg") to get all
-//      size radio buttons. Loop through them to find the
-//      one that is .checked, and read its .value.
-//      Convert to a number with parseFloat().
-const pizza = document.getElementsByName("rg");
-let selected = 0;
-for (let i = 0; i < pizza.length; i++) {
-    if (pizza[i].checked) {
-        selected = pizza[i].value;
+    for (let i = 0; i < pizza.length; i++) {
+        if (pizza[i].checked) {
+            selected = parseFloat(pizza[i].value);
+        }
     }
-}
-//   b) Count checked toppings:
-//      Use document.getElementsByName("cb") to get all
-//      topping checkboxes. Loop through and count how
-//      many are .checked. Multiply count by 0.50.
-let toppingsprice = 0;
-let toppingscount = 0;
-const toppings = document.getElementsByName('cb');
-for (let i = 0; i < toppings.length; i++) {
-    if (toppings[i].checked) {
-        toppingscount = toppingscount + 1;
-    }
-toppingsprice = 0.5 * toppingscount;
-};
-//   c) Get the service fee:
-//      Use document.getElementById("serviceSelect").value
-//      to get the selected option value ("dinein", "takeout",
-//      or "delivery").
-//      Use if/else if/else to set the fee:
-//        "dinein"   → 0
-//        "takeout"  → 1.50
-//        "delivery" → 3.00
-const service = document.getElementsById("serviceSelect").value;
-let servicefee = 0;
-if (service == "dinein") {
-    servicefee = 0;
-} 
-else if (service == "takeout") {
-    servicefee = 1.5;
-} 
-else if (service == "delivery") {
-    servicefee = 3.0;
-};
-//   d) Calculate total: size + toppings + service fee
-total = servicefee + selected + toppingsprice;
-//   e) Get the customer name from the input with ID "myInput"
-let customername = document.getElementById("myInput");
-//   f) Display the result in the element with ID "myPara":
-//      "[name], your total is $[total]"
-//      Use .toFixed(2) to format the total.
-//      Example: "Alice, your total is $13.50"
-//      If name is empty, use "Customer" as the default.
-btnCalc.addEventListener('click', function() {
-    myPara.innerHTML = customername + ", your total is" + total;
-})
 
-// STEP 4: Get the "Clear" button by ID ("clearBtn")
-//         Add a click event listener.
-//         Inside the listener:
-//         a) Set the name input value to ""
-//         b) Set the Large radio (id "r3") to checked = true
-//         c) Uncheck ALL topping checkboxes (loop through them)
-//         d) Set the service dropdown value to "dinein"
-//         e) Set the output paragraph innerHTML to ""
+    // b) Toppings
+    let toppingsprice = 0;
+    let toppingscount = 0;
+    const toppings = document.getElementsByName("cb");
+
+    for (let i = 0; i < toppings.length; i++) {
+        if (toppings[i].checked) {
+            toppingscount = toppingscount + 1;
+        }
+    }
+
+    toppingsprice = 0.5 * toppingscount;
+
+    // c) Service fee
+    const service = document.getElementById("serviceSelect").value;
+    let servicefee = 0;
+
+    if (service == "dinein") {
+        servicefee = 0;
+    }
+    else if (service == "takeout") {
+        servicefee = 1.5;
+    }
+    else if (service == "delivery") {
+        servicefee = 3.0;
+    }
+
+    // d) Calculate total
+    let total = servicefee + selected + toppingsprice;
+
+    // e) Customer name
+    let customername = document.getElementById("myInput").value;
+
+    if (customername.trim() == "") {
+        customername = "Customer";
+    }
+
+    // f) Display result
+    document.getElementById("myPara").innerHTML =
+        customername + ", your total is $" + total.toFixed(2);
+});
+
+// Clear button
+document.getElementById("clearBtn").addEventListener("click", function() {
+
+    document.getElementById("myInput").value = "";
+
+    document.getElementById("r3").checked = true;
+
+    const toppings = document.getElementsByName("cb");
+
+    for (let i = 0; i < toppings.length; i++) {
+        toppings[i].checked = false;
+    }
+
+    document.getElementById("serviceSelect").value = "dinein";
+
+    document.getElementById("myPara").innerHTML = "";
+});
